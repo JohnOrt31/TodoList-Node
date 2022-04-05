@@ -1,18 +1,38 @@
 require('colors');
 
-const { showMenu, pause } = require('./helpers/messages');
+const { 
+    inquirerMenu, 
+    pause, 
+    readInput } = require('./helpers/inquirer');
+const Tasks = require('./models/tasks');
 
 console.clear();
 
 const main = async() => {
-    console.log('Hola Mundo');
-
     let opt = '';
+    const tasks= new Tasks();
+
     do {
-        opt = await showMenu(); 
-        console.log({opt})
-        if ( opt !== '0' ) await pause();  
-    } while ( opt != '0' );
+        opt = await inquirerMenu(); 
+
+        switch (opt) {
+            case '1':
+                // Add task
+                const descr = await readInput('Description: ');
+                tasks.addTask( descr );
+            break;
+
+            case '2':
+                console.log( tasks.listArray );
+            break;
+        
+            default:
+                break;
+        }
+       
+        await pause();
+          
+    } while ( opt !== '0' );
     
 }
 
