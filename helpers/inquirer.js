@@ -42,7 +42,7 @@ const questions = [
 const inquirerMenu = async() => {
     console.clear();
     console.log('====================='.green);
-    console.log(' Select an option'.green);
+    console.log(' Select an option'.white);
     console.log('=====================\n'.green);
     const { option } = await inquirer.prompt(questions);
     return option;
@@ -80,8 +80,78 @@ const readInput = async( message ) => {
     return descr;
 }
 
+
+const listDeleteTasks = async( tasks = [] ) => {
+
+    const choices = tasks.map( (task, i) => {
+        const idx =  `${i + 1}`.green;
+        return {
+            value: task.id,
+            name: `${ idx } ${ task.descr }` 
+
+        }
+    });
+    choices.unshift({
+        value: '0',
+        name: '0.'.green + 'Cancelar'
+    })
+
+    const questions = [
+        {
+            type: 'list',
+            name: 'id',
+            message: 'Delete',
+            choices
+        }
+    ]
+
+    const { id } = await inquirer.prompt(questions);
+    return id;
+}
+
+const confirm = async( message ) => {
+    const question =  [
+        {
+            type: 'confirm',
+            name: 'ok',
+            message
+        }
+    ];
+
+    const { ok } = await inquirer.prompt(question);
+    return ok;
+}
+
+const showListCheckList = async( tasks = [] ) => {
+
+    const choices = tasks.map( (task, i) => {
+        const idx =  `${i + 1}`.green;
+        return {
+            value: task.id,
+            name: `${ idx } ${ task.descr }`,
+            checked: ( task.completedIn ) ? true : false
+
+        }
+    });
+
+    const question = [
+        {
+            type: 'checkbox',
+            name: 'ids',
+            message: 'Selects',
+            choices
+        }
+    ]
+
+    const { ids } = await inquirer.prompt(question);
+    return ids;
+}
+
 module.exports = {
     inquirerMenu,
     pause, 
-    readInput
+    readInput,
+    listDeleteTasks,
+    confirm,
+    showListCheckList
 }
